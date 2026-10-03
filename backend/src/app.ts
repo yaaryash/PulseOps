@@ -2,7 +2,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 
+import { errorHandler, notFoundHandler } from "./middleware/error.middleware";
 import healthRouter from "./routes/health.routes";
+import serviceRouter from "./routes/service.routes";
 
 dotenv.config();
 
@@ -29,12 +31,9 @@ app.get("/", (_request, response) => {
 });
 
 app.use("/api/health", healthRouter);
+app.use("/api/services", serviceRouter);
 
-app.use((_request, response) => {
-  response.status(404).json({
-    success: false,
-    message: "Route not found",
-  });
-});
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 export default app;
